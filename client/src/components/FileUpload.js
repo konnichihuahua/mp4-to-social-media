@@ -30,7 +30,6 @@ const FileUpload = ({
     setResultIsLoaded(false);
     await load();
     const ffmpeg = ffmpegRef.current;
-
     await ffmpeg.exec(["-i", "input.mp4", "output.mp3"]);
     const data = await ffmpeg.readFile("output.mp3");
     const formData = new FormData(event.target);
@@ -38,6 +37,10 @@ const FileUpload = ({
     await fetch("/mp4", {
       method: "POST",
       body: formData,
+
+      headers: {
+        "Content-Type": "multipart/form-data",
+      },
     })
       .then((result) => result.json())
       .then((data) => {
