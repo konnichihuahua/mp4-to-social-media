@@ -5,7 +5,7 @@ import transcribeRoute from "./server/routes/transcribe.js";
 import transcribeMp4Route from "./server/routes/transcribemp4.js";
 import path from "path";
 import { fileURLToPath } from "url";
-const bodyParser = require("body-parser");
+import bodyParser from "body-parser";
 
 const __filename = fileURLToPath(import.meta.url);
 
