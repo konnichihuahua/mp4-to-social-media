@@ -30,7 +30,7 @@ const FileUpload = ({
     setResultIsLoaded(false);
     await load();
     const ffmpeg = ffmpegRef.current;
-    await ffmpeg.writeFile("input.mp4", await fetchFile(file));
+
     await ffmpeg.exec(["-i", "input.mp4", "output.mp3"]);
     const data = await ffmpeg.readFile("output.mp3");
     const formData = new FormData(event.target);
