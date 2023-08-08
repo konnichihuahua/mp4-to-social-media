@@ -11,7 +11,7 @@ import multer from "multer";
 const __filename = fileURLToPath(import.meta.url);
 
 const __dirname = path.dirname(__filename);
-const upload = multer({ storage });
+
 const storage = multer.diskStorage({
   filename: function (req, file, cb) {
     cb(null, file.originalname);
@@ -20,7 +20,7 @@ const storage = multer.diskStorage({
     cb(null, "./uploads");
   },
 });
-
+const upload = multer({ storage });
 const app = express();
 app.use(cors());
 
