@@ -26,7 +26,7 @@ function Results({ title, caption }) {
         </div>
       </div>
       <div className="flex flex-col gap-2 items-center justify-center p-10 result">
-        <div className="flex flex-col justify-center items-center">
+        <div className="flex flex-col gap-2 justify-center items-center">
           <h3 className="text-md min-w-full text-white bg-blue-950 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 rounded-lg px-4 py-2 text-center mr-3 md:mr-0 dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800">
             Description:
           </h3>
