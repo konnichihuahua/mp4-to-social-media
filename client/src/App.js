@@ -4,16 +4,14 @@ import SocialMediaForm from "./components/SocialMediaForm";
 import Results from "./components/Results";
 import Transcribe from "./components/Transcribe";
 import AtomicSpinner from "atomic-spinner";
-import { useState, useEffect } from "react";
+
+import { useState } from "react";
 
 function App() {
-  const [loading, setLoading] = useState(true);
-  useEffect(() => {
-    setLoading(false);
-  }, []);
   const [title, setTitle] = useState("------------------");
   const [caption, setCaption] = useState("------------------");
   const [fromText, setFromText] = useState(false);
+
   const [resultIsLoaded, setResultIsLoaded] = useState(true);
 
   const onSubmit = (data) => {
@@ -21,13 +19,14 @@ function App() {
     getTitle(data);
     getCaption(data);
   };
+
   const getTitle = (data) => {
-    fetch(`/get/title/${data}`)
+    fetch(`https://fine-shorts-tuna.cyclic.app/get/title/${data}`)
       .then((response) => response.json())
       .then((data) => setTitle(data.title));
   };
   const getCaption = (data) => {
-    fetch(`/get/description/${data}`)
+    fetch(`https://fine-shorts-tuna.cyclic.app/get/description/${data}`)
       .then((response) => response.json())
       .then((data) => {
         setCaption(data.description);
@@ -50,7 +49,7 @@ function App() {
               type="button"
               className="text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm px-4 py-2 text-center mr-3 md:mr-0 dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800"
             >
-              Contact
+              Hire Me
             </button>
             <button
               data-collapse-toggle="navbar-sticky"
@@ -99,36 +98,30 @@ function App() {
           </div>
         </div>
       </nav>
-      {loading ? (
-        <div className="loader-container flex justify-center items-center">
-          <AtomicSpinner />
-          <p> Generating Magic...</p>
-        </div>
-      ) : (
-        <div className="main-content flex justify-center items-center">
-          {fromText ? (
-            <SocialMediaForm
-              onSubmit={onSubmit}
-              setResultIsLoaded={setResultIsLoaded}
-            />
-          ) : (
-            <Transcribe
-              setCaption={setCaption}
-              setTitle={setTitle}
-              setResultIsLoaded={setResultIsLoaded}
-            />
-          )}
 
-          {resultIsLoaded ? (
-            <Results title={title} caption={caption} />
-          ) : (
-            <div className="loader-container flex justify-center items-center">
-              <AtomicSpinner />
-              <p> Generating Magic...</p>
-            </div>
-          )}
-        </div>
-      )}
+      <div className="main-content flex justify-center items-center">
+        {fromText ? (
+          <SocialMediaForm
+            onSubmit={onSubmit}
+            setResultIsLoaded={setResultIsLoaded}
+          />
+        ) : (
+          <Transcribe
+            setCaption={setCaption}
+            setTitle={setTitle}
+            setResultIsLoaded={setResultIsLoaded}
+          />
+        )}
+
+        {resultIsLoaded ? (
+          <Results title={title} caption={caption} />
+        ) : (
+          <div className="loader-container flex justify-center items-center">
+            <AtomicSpinner />
+            <p> Generating Magic...</p>
+          </div>
+        )}
+      </div>
     </div>
   );
 }

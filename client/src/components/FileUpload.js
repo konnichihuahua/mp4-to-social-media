@@ -1,6 +1,7 @@
 import React, { useRef } from "react";
 import { FFmpeg } from "@ffmpeg/ffmpeg";
 import { fetchFile, toBlobURL } from "@ffmpeg/util";
+
 const FileUpload = ({
   setTitle,
   setCaption,
@@ -9,6 +10,7 @@ const FileUpload = ({
   setFile,
 }) => {
   const ffmpegRef = useRef(new FFmpeg());
+
   const handleFileChange = (event) => {
     event.preventDefault();
     const file = event.target.files[0];
@@ -17,6 +19,11 @@ const FileUpload = ({
   const load = async () => {
     const baseURL = "https://unpkg.com/@ffmpeg/core@0.12.1/dist/umd";
     const ffmpeg = ffmpegRef.current;
+    ffmpeg.on("log", ({ message }) => {
+      console.log(message);
+    });
+    // toBlobURL is used to bypass CORS issue, urls with the same
+    // domain can be used directly.
     await ffmpeg.load({
       coreURL: await toBlobURL(`${baseURL}/ffmpeg-core.js`, "text/javascript"),
       wasmURL: await toBlobURL(
@@ -30,16 +37,14 @@ const FileUpload = ({
     setResultIsLoaded(false);
     await load();
     const ffmpeg = ffmpegRef.current;
+    await ffmpeg.writeFile("input.mp4", await fetchFile(file));
     await ffmpeg.exec(["-i", "input.mp4", "output.mp3"]);
     const data = await ffmpeg.readFile("output.mp3");
     const formData = new FormData(event.target);
     formData.append("file", new Blob([data.buffer]));
-    fetch("/mp4", {
-      method: "GET",
+    await fetch("https://fine-shorts-tuna.cyclic.app/mp4", {
+      method: "POST",
       body: formData,
-      headers: {
-        "Content-Type": "multipart/form-data",
-      },
     })
       .then((result) => result.json())
       .then((data) => {
