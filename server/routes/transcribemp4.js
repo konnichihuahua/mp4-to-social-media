@@ -4,7 +4,6 @@ import { Configuration, OpenAIApi } from "openai";
 import cors from "cors";
 import { Readable } from "stream";
 import "dotenv/config";
-import path from "path";
 
 const router = express.Router();
 router.use(cors());
@@ -56,10 +55,6 @@ async function transcribeMp4(audio_buffer) {
     });
   return (result = [generatedTitle, generatedCaption]);
 }
-
-router.get("/", (req, res) => {
-  res.sendFile(path.join(___dirname, "../public", "index.html"));
-});
 
 router.get("/", upload.single("file"), async (req, res) => {
   const audio_file = req.files[1];
