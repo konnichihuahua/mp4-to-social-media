@@ -5,6 +5,7 @@ import transcribeRoute from "./server/routes/transcribe.js";
 import transcribeMp4Route from "./server/routes/transcribemp4.js";
 import path from "path";
 import { fileURLToPath } from "url";
+const bodyParser = require("body-parser");
 
 const __filename = fileURLToPath(import.meta.url);
 
@@ -15,6 +16,8 @@ app.use(express.json());
 app.use("/get", titleRoute);
 app.use("/transcribe", transcribeRoute);
 app.use("/mp4", transcribeMp4Route);
+app.use(bodyParser.json({ limit: "50mb" }));
+app.use(bodyParser.urlencoded({ limit: "50mb", extended: true }));
 app.use(express.static(path.join(__dirname, "./client/build")));
 app.get("*", function (_, res) {
   res.sendFile(

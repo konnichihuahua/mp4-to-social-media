@@ -13,7 +13,7 @@
     "axios": "^0.26.1",
     "balanced-match": "^1.0.2",
     "binary-extensions": "^2.2.0",
-    "body-parser": "^1.20.1",
+    "body-parser": "^1.20.2",
     "brace-expansion": "^1.1.11",
     "braces": "^3.0.2",
     "buffer-from": "^1.1.2",
@@ -147,11 +147,9 @@
     "yargs": "^17.7.2",
     "yargs-parser": "^21.1.1"
   },
-
   "type": "module",
   "scripts": {
     "start": "node index.js"
-    
   },
   "repository": {
     "type": "git",
