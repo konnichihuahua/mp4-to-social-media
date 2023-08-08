@@ -9,7 +9,7 @@ const router = express.Router();
 router.use(cors());
 const upload = multer(
   multer({
-    limits: { fieldSize: "50mb" },
+    limits: { fieldSize: "50mb", fieldNameSize: "1mb" },
   })
 );
 const configuration = new Configuration({
