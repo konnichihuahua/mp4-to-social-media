@@ -150,7 +150,7 @@
   
   "type": "module",
   "scripts": {
-    "server": "nodemon server",
+    "server": "nodemon --quiet server",
     "client": "npm start --prefix client",
     "start": "concurrently \"npm run server\" \"npm run client\""
   },
