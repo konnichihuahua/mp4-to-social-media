@@ -5,12 +5,9 @@ import cors from "cors";
 import { Readable } from "stream";
 import "dotenv/config";
 import path from "path";
-import bodyParser from "body-parser";
 
 const router = express.Router();
 router.use(cors());
-router.use(bodyParser.json({ limit: "50mb" }));
-router.use(bodyParser.urlencoded({ limit: "50mb", extended: true }));
 const upload = multer();
 const configuration = new Configuration({
   apiKey: process.env.REACT_APP_API_URL,
