@@ -22,12 +22,12 @@ function App() {
     getCaption(data);
   };
   const getTitle = (data) => {
-    fetch(`http://localhost:5000/get/title/${data}`)
+    fetch(`/get/title/${data}`)
       .then((response) => response.json())
       .then((data) => setTitle(data.title));
   };
   const getCaption = (data) => {
-    fetch(`http://localhost:5000/get/description/${data}`)
+    fetch(`/get/description/${data}`)
       .then((response) => response.json())
       .then((data) => {
         setCaption(data.description);

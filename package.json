@@ -150,9 +150,7 @@
   
   "type": "module",
   "scripts": {
-    "server": "node --quiet server",
-    "client": "npm start --prefix client",
-    "start": "concurrently \"node ./server/index\" \"cd client && npm start\""
+    "start": "node ./server/index.js"
     
   },
   "repository": {
