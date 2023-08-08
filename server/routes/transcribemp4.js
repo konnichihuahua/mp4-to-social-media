@@ -4,7 +4,7 @@ import { Configuration, OpenAIApi } from "openai";
 import cors from "cors";
 import { Readable } from "stream";
 import "dotenv/config";
-
+import path from "path";
 const router = express.Router();
 router.use(cors());
 const upload = multer(
