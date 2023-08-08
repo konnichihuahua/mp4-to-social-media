@@ -14,7 +14,6 @@ const app = express();
 app.use("/get", titleRoute);
 app.use("/transcribe", transcribeRoute);
 app.use("/mp4", transcribeMp4Route);
-app.use(express.static(path.join(__dirname, "./client/build")));
 app.get("*", function (_, res) {
   res.sendFile(
     path.join(__dirname, "./client/build/index.html"),
