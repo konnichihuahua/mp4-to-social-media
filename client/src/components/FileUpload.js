@@ -34,10 +34,9 @@ const FileUpload = ({
     const data = await ffmpeg.readFile("output.mp3");
     const formData = new FormData(event.target);
     formData.append("file", new Blob([data.buffer]));
-    await fetch("/mp4", {
-      method: "POST",
+    fetch("/mp4", {
+      method: "GET",
       body: formData,
-
       headers: {
         "Content-Type": "multipart/form-data",
       },
