@@ -9,7 +9,6 @@ const router = express.Router();
 router.use(cors());
 const upload = multer(
   multer({
-    storage: storage,
     limits: { fileSize: maxSize },
   })
 );
