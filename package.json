@@ -152,7 +152,8 @@
   "scripts": {
     "server": "node --quiet server",
     "client": "npm start --prefix client",
-    "start": "node ./server/index"
+    "start": "concurrently \"node ./server/index\" \"cd client && npm start\""
+    
   },
   "repository": {
     "type": "git",
