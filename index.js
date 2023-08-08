@@ -18,8 +18,8 @@ app.use("/get", titleRoute);
 app.use("/transcribe", transcribeRoute);
 app.use("/mp4", transcribeMp4Route);
 
-app.use(bodyParser.json({ limit: "50mb" }));
-app.use(bodyParser.urlencoded({ limit: "50mb", extended: true }));
+app.use(express.json({ limit: "50mb" }));
+app.use(express.urlencoded({ limit: "50mb" }));
 app.use(express.static(path.join(__dirname, "./client/build")));
 app.get("*", function (_, res) {
   res.sendFile(
