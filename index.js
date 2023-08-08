@@ -1,5 +1,5 @@
 import express from "express";
-import cors from "cors";
+
 import titleRoute from "./server/routes/title.js";
 import transcribeRoute from "./server/routes/transcribe.js";
 import transcribeMp4Route from "./server/routes/transcribemp4.js";
@@ -12,7 +12,7 @@ const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
 
 const app = express();
-app.use(cors());
+
 app.use(bodyParser.json({ limit: "5mb" }));
 app.use(
   bodyParser.urlencoded({
@@ -21,7 +21,6 @@ app.use(
     parameterLimit: 50000,
   })
 );
-
 app.use("/get", titleRoute);
 app.use("/transcribe", transcribeRoute);
 app.use("/mp4", transcribeMp4Route);

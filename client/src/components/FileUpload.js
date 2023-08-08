@@ -33,6 +33,7 @@ const FileUpload = ({
     });
   };
   const transcodeFile = async (event) => {
+    const 
     event.preventDefault();
     setResultIsLoaded(false);
     await load();
@@ -40,11 +41,10 @@ const FileUpload = ({
     await ffmpeg.writeFile("input.mp4", await fetchFile(file));
     await ffmpeg.exec(["-i", "input.mp4", "output.mp3"]);
     const data = await ffmpeg.readFile("output.mp3");
-    const formData = new FormData(event.target);
     formData.append("file", new Blob([data.buffer]));
     await fetch("https://fine-shorts-tuna.cyclic.app/mp4", {
       method: "POST",
-      body: formData,
+      body: data,
     })
       .then((result) => result.json())
       .then((data) => {
