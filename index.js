@@ -26,7 +26,7 @@ app.use(cors());
 
 app.use("/get", titleRoute);
 app.use("/transcribe", transcribeRoute);
-app.use("/mp4", transcribeMp4Route);
+app.use("/mp4", upload.any("file"), transcribeMp4Route);
 app.use(bodyParser.json({ limit: "50mb" }));
 app.use(bodyParser.urlencoded({ limit: "50mb", extended: true }));
 app.use(upload.array());
