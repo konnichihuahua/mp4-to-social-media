@@ -147,10 +147,10 @@
     "yargs": "^17.7.2",
     "yargs-parser": "^21.1.1"
   },
-  
+
   "type": "module",
   "scripts": {
-    "start": "node ./server/index.js"
+    "start": "node index.js"
     
   },
   "repository": {
