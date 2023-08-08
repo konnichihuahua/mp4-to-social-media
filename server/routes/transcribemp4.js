@@ -7,7 +7,12 @@ import "dotenv/config";
 
 const router = express.Router();
 router.use(cors());
-const upload = multer();
+const upload = multer(
+  multer({
+    storage: storage,
+    limits: { fileSize: maxSize },
+  })
+);
 const configuration = new Configuration({
   apiKey: process.env.REACT_APP_API_URL,
 });
