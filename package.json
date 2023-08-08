@@ -152,7 +152,7 @@
   "scripts": {
     "server": "nodemon server",
     "client": "npm start --prefix client",
-    "build": "concurrently \"npm run server\" \"npm run client\""
+    "start": "concurrently \"npm run server\" \"npm run client\""
   },
   "repository": {
     "type": "git",
