@@ -55,12 +55,12 @@ const FileUpload = ({
   };
   return (
     <form
-      className="flex flex-col items-center justify-center"
+      className="drop-container flex flex-col items-center justify-center "
       id="transcription-form"
       encType="multipart/form-data"
       onSubmit={transcodeFile}
     >
-      <label className="drop-container" id="dropcontainer">
+      <label className="flex flex-col gap-2 p-5" id="dropcontainer">
         <span className="drop-title">Drop files here</span>
         or
         <input

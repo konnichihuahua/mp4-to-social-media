@@ -35,8 +35,8 @@ function App() {
   };
 
   return (
-    <div className="App flex flex-col justify-center align-center p-5 ">
-      <nav className="bg-white dark:bg-gray-900 fixed w-full z-20 top-0 left-0 border-b border-gray-200 dark:border-gray-600">
+    <div className="App flex flex-col justify-center items-center min-h-screen">
+      <nav className="bg-white dark:bg-gray-900 static w-full z-20 top-0 left-0 border-b border-gray-200 dark:border-gray-600 sm: fixed md:fixed lg:fixed">
         <div className="max-w-screen-xl flex flex-wrap items-center justify-between mx-auto p-4">
           <a className="flex items-center" href="/">
             <img src={logo} className="h-12" alt="Clip2Gram Logo" />
@@ -99,7 +99,7 @@ function App() {
         </div>
       </nav>
 
-      <div className="main-content flex justify-center items-center">
+      <div className="min-w-min main-content mt-5 flex flex-col md:flex-row items-center lg:flex-row">
         {fromText ? (
           <SocialMediaForm
             onSubmit={onSubmit}
