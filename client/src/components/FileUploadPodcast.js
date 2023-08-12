@@ -1,7 +1,8 @@
 import React, { useRef } from "react";
 import { FFmpeg } from "@ffmpeg/ffmpeg";
 import { fetchFile, toBlobURL } from "@ffmpeg/util";
-const FileUpload = ({
+
+const FileUploadPodcast = ({
   setTitle,
   setCaption,
   setResultIsLoaded,
@@ -36,12 +37,12 @@ const FileUpload = ({
     setResultIsLoaded(false);
     await load();
     const ffmpeg = ffmpegRef.current;
-    await ffmpeg.writeFile("input.mp4", await fetchFile(file));
-    await ffmpeg.exec(["-i", "input.mp4", "output.mp3"]);
+    await ffmpeg.writeFile("input.mp3", await fetchFile(file));
+    await ffmpeg.exec(["-i", "input.mp3", "output.mp3"]);
     const data = await ffmpeg.readFile("output.mp3");
     const formData = new FormData(event.target);
     formData.append("file", new Blob([data.buffer]));
-    await fetch("http://localhost:3000/mp4", {
+    await fetch("http://localhost:3000/podcast", {
       method: "POST",
       body: formData,
     })
@@ -60,13 +61,13 @@ const FileUpload = ({
       onSubmit={transcodeFile}
     >
       <label className="flex flex-col gap-2 p-5" id="dropcontainer">
-        <span className="drop-title">Drop files here</span>
-        or
+        <span className="drop-title">Drop .mp3 audio file here</span>
+
         <input
           id="file-upload"
           type="file"
           name="file"
-          accept=".mp4,.mp3"
+          accept=".mp3"
           onChange={handleFileChange}
         />
         <input
@@ -79,4 +80,4 @@ const FileUpload = ({
   );
 };
 
-export default FileUpload;
+export default FileUploadPodcast;
