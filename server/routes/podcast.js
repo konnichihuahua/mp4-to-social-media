@@ -57,7 +57,7 @@ async function transcribeMp4(audio_buffer) {
     .then((result) => {
       generatedTitle = result.data.choices[0].message.content;
     });
-  return (result = [generatedTitle, generatedCaption]);
+  return (result = [generatedTitle, generatedCaption, generatedText]);
 }
 
 router.get("/", (req, res) => {

@@ -11,7 +11,7 @@ import { useState } from "react";
 function App() {
   const [title, setTitle] = useState("------------------");
   const [caption, setCaption] = useState("------------------");
-  const [showForm, setShowForm] = useState("video");
+  const [showForm, setShowForm] = useState("podcast");
   const [resultIsLoaded, setResultIsLoaded] = useState(true);
 
   const onSubmit = (data) => {
@@ -96,7 +96,7 @@ function App() {
               </li>
               <li onClick={() => setShowForm("podcast")}>
                 <b className="block py-2 pl-3 pr-4 text-gray-900 rounded hover:bg-gray-100 md:hover:bg-transparent md:hover:text-blue-700 md:p-0 md:dark:hover:text-blue-500 dark:text-white dark:hover:bg-gray-700 dark:hover:text-white md:dark:hover:bg-transparent dark:border-gray-700">
-                  Generate From Podcast
+                  Generate From Podcast (ongoing..)
                 </b>
               </li>
             </ul>

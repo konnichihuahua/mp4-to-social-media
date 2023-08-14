@@ -3,7 +3,7 @@ import bodyParser from "body-parser";
 import titleRoute from "./server/routes/title.js";
 import transcribeRoute from "./server/routes/transcribe.js";
 import transcribeMp4Route from "./server/routes/transcribemp4.js";
-import transcribePodcastRoute from "./server/routes/transcribemp4.js";
+import transcribePodcastRoute from "./server/routes/podcast.js";
 import path from "path";
 import { fileURLToPath } from "url";
 
