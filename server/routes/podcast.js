@@ -17,47 +17,22 @@ const configuration = new Configuration({
 });
 
 async function transcribeMp4(audio_buffer) {
-  let generatedText = "";
-  let generatedCaption = "";
-  let generatedTitle = "";
-  let result = [];
-  const openai = new OpenAIApi(configuration);
-  const audioReadStream = Readable.from(audio_buffer);
-  audioReadStream.path = `test.mp3`;
-  await openai
-    .createTranscription(audioReadStream, "whisper-1")
-    .then((result) => {
-      generatedText = result.data.text;
-    });
+  let transcript = [];
 
-  await openai
-    .createChatCompletion({
-      model: "gpt-3.5-turbo",
-      messages: [
-        {
-          role: "user",
-          content: `Write a 1 sentence tiktok caption from a transcript. Write like a native english speaker. Then add relevant hashtags. Hashtags must be in lowercase. Add the hashtag #degreefree, #college, #collegetips, #jobs, #jobsearch, #jobhunt, #jobhunting. The transcript is: "${generatedText}". `,
-        },
-      ],
-    })
-    .then((result) => {
-      generatedCaption = result.data.choices[0].message.content;
-    });
+  for (let i = 0; i < audio_buffer.length; i++) {
+    const openai = new OpenAIApi(configuration);
+    const audioReadStream = Readable.from(audio_buffer);
+    audioReadStream.path = `test.mp3`;
+    await openai
+      .createTranscription(audioReadStream, "whisper-1")
+      .then((result) => {
+        const transcribedText = result.data.text;
+        transcript.push(transcribedText);
+      });
+  }
 
-  await openai
-    .createChatCompletion({
-      model: "gpt-3.5-turbo",
-      messages: [
-        {
-          role: "user",
-          content: `Write a youtube shorts title about ${generatedText}. Make it only 5 words. Don't include other message as this is for a web app.${generatedText}`,
-        },
-      ],
-    })
-    .then((result) => {
-      generatedTitle = result.data.choices[0].message.content;
-    });
-  return (result = [generatedTitle, generatedCaption, generatedText]);
+  console.log(transcript);
+  return transcript;
 }
 
 router.get("/", (req, res) => {
@@ -65,9 +40,13 @@ router.get("/", (req, res) => {
 });
 
 router.post("/", upload.any("file"), async (req, res) => {
-  const audio_file = req.files[1];
-  const buffer = audio_file.buffer;
-  const response = await transcribeMp4(buffer);
+  const audio_file1 = req.files[1];
+  const audio_file2 = req.files[2];
+  const buffer1 = audio_file1.buffer;
+  const buffer2 = audio_file2.buffer;
+
+  console.log([buffer1, buffer2]);
+  const response = await transcribeMp4([buffer1, buffer2]);
   res.json({ caption: response });
 });
 
