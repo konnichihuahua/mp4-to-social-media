@@ -38,6 +38,7 @@ async function transcribeMp4(audio_buffer) {
 router.get("/", (req, res) => {
   res.sendFile(path.join(___dirname, "../public", "index.html"));
 });
+``;
 
 router.post("/", upload.any("file"), async (req, res) => {
   const audio_file1 = req.files[1];

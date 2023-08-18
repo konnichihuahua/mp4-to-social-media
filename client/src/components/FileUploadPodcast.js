@@ -17,25 +17,39 @@ const FileUploadPodcast = ({
 
     reader.onload = function () {
       const textFromFile = reader.result;
-      setTranscript({ textFromFile });
+      setTranscript(textFromFile);
     };
+  };
+
+  const cutTranscript = (transcript) => {
+    const words = transcript.split(/\s+/); // Split transcript into words
+    const chunkSize = 3000; // Desired chunk size in words
+    const chunks = [];
+
+    for (let i = 0; i < words.length; i += chunkSize) {
+      const chunk = words.slice(i, i + chunkSize).join(" ");
+      chunks.push(chunk);
+    }
+
+    return chunks;
   };
   const readFile = async (event) => {
     event.preventDefault();
-    console.log(transcript);
-
+    const separatedTranscripts = cutTranscript(transcript);
+    console.log(separatedTranscripts);
+    setResultIsLoaded(false);
     await fetch("http://localhost:3000/transcript", {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
       },
-      body: JSON.stringify(transcript),
+      body: JSON.stringify(separatedTranscripts),
     })
       .then((result) => result.json())
       .then((data) => {
-        setTitle(data.caption[0]);
-        setCaption(data.caption[1]);
         console.log(data);
+        setTitle(data[0]);
+        setCaption(data[1]);
         setResultIsLoaded(true);
       });
   };
