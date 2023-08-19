@@ -63,7 +63,7 @@ const FileUploadPodcast = ({
         onSubmit={readFile}
       >
         <label className="flex flex-col gap-2 p-5" id="dropcontainer">
-          <span className="drop-title">Drop .txt file here</span>
+          <span className="drop-title">Drop Transcript file here (.txt)</span>
 
           <input
             id="file-upload"

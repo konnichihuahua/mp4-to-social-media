@@ -60,7 +60,7 @@ const FileUpload = ({
       onSubmit={transcodeFile}
     >
       <label className="flex flex-col gap-2 p-5" id="dropcontainer">
-        <span className="drop-title">Drop files here</span>
+        <span className="drop-title">Drop highlight here (.mp4)</span>
         or
         <input
           id="file-upload"
