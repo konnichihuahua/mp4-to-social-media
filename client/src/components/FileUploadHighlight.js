@@ -1,10 +1,10 @@
 import React, { useRef } from "react";
 import { FFmpeg } from "@ffmpeg/ffmpeg";
 import { fetchFile, toBlobURL } from "@ffmpeg/util";
-const FileUpload = ({
+const FileUploadHighlight = ({
   setTitle,
   setCaption,
-  setResultIsLoaded,
+  setResultIsLoading,
   file,
   setFile,
 }) => {
@@ -33,7 +33,7 @@ const FileUpload = ({
   };
   const transcodeFile = async (event) => {
     event.preventDefault();
-    setResultIsLoaded(false);
+    setResultIsLoading(true);
     await load();
     const ffmpeg = ffmpegRef.current;
     await ffmpeg.writeFile("input.mp4", await fetchFile(file));
@@ -49,7 +49,7 @@ const FileUpload = ({
       .then((data) => {
         setTitle(data.caption[0]);
         setCaption(data.caption[1]);
-        setResultIsLoaded(true);
+        setResultIsLoading(false);
       });
   };
   return (
@@ -79,4 +79,4 @@ const FileUpload = ({
   );
 };
 
-export default FileUpload;
+export default FileUploadHighlight;

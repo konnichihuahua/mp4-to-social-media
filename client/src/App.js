@@ -1,8 +1,6 @@
 import logo from "./logo.svg";
 import "./App.css";
-import Results from "./components/Results";
-import Transcribe from "./components/Transcribe";
-import AtomicSpinner from "atomic-spinner";
+import Highlight from "./components/Highlight";
 import Podcast from "./components/Podcast";
 
 import { useState } from "react";
@@ -10,9 +8,9 @@ import { useState } from "react";
 function App() {
   const [title, setTitle] = useState("------------------");
   const [caption, setCaption] = useState("------------------");
-  const [showForm, setShowForm] = useState("podcast");
-  const [resultIsLoaded, setResultIsLoaded] = useState(true);
-  const [isMenuOpen, setIsMenuOpen] = useState(false);
+  const [showForm, setShowForm] = useState("highlights");
+  const [resultIsLoaded, setResultIsLoaded] = useState(false);
+  const [isMenuOpen, setIsMenuOpen] = useState(true);
   const [isModalOpen, setIsModalOpen] = useState(false);
 
   const toggleMenu = () => {
@@ -102,13 +100,13 @@ function App() {
                     className="block py-2 pl-3 pr-4 text-white bg-blue-700 rounded md:bg-transparent md:text-blue-700 md:p-0 md:dark:text-blue-500"
                     aria-current="page"
                   >
-                    Highlights Title & Description
+                    Highlights
                   </b>
                 </li>
 
                 <li onClick={() => setShowForm("podcast")}>
                   <b className="block py-2 pl-3 pr-4 text-gray-900 rounded hover:bg-gray-100 md:hover:bg-transparent md:hover:text-blue-700 md:p-0 md:dark:hover:text-blue-500 dark:text-white dark:hover:bg-gray-700 dark:hover:text-white md:dark:hover:bg-transparent dark:border-gray-700">
-                    Podcast Episode Title & Description
+                    Podcast
                   </b>
                 </li>
               </ul>
@@ -152,11 +150,7 @@ function App() {
 
       <div className="min-w-min main-content mt-5 flex flex-col md:flex-row items-center lg:flex-row">
         {showForm === "highlights" ? (
-          <Transcribe
-            setCaption={setCaption}
-            setTitle={setTitle}
-            setResultIsLoaded={setResultIsLoaded}
-          />
+          <Highlight />
         ) : showForm === "podcast" ? (
           <Podcast
             setCaption={setCaption}
@@ -164,15 +158,6 @@ function App() {
             setResultIsLoaded={setResultIsLoaded}
           />
         ) : null}
-
-        {resultIsLoaded ? (
-          <Results title={title} caption={caption} showForm={showForm} />
-        ) : (
-          <div className="loader-container flex justify-center items-center">
-            <AtomicSpinner />
-            <p> Generating Magic...</p>
-          </div>
-        )}
       </div>
     </div>
   );

@@ -1,6 +1,6 @@
 import React from "react";
 import { AiFillCopy } from "react-icons/ai";
-function Results({ title, caption, showForm }) {
+function Results({ title, caption }) {
   const copyContent = async (target) => {
     try {
       await navigator.clipboard.writeText(target);
