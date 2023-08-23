@@ -16,7 +16,11 @@ function PodcastResults({ title, description, tags, showNotes }) {
           Episode Title(s):
         </h3>{" "}
         <div className="flex justify-center items-center">
-          <div>{title}</div>
+          <ul>
+            {title.map((title) => (
+              <li>{title}</li>
+            ))}
+          </ul>
           <div>
             <AiFillCopy
               className="h-10 w-10"

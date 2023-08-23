@@ -9,24 +9,6 @@ const configuration = new Configuration({
   apiKey: process.env.REACT_APP_API_URL,
 });
 router.use(cors());
-const getDescriptions = async (data) => {
-  let generatedTitle = "";
-  await openai
-    .createChatCompletion({
-      model: "gpt-3.5-turbo",
-      messages: [
-        {
-          role: "user",
-          content: `Write a youtube shorts title about ${data}. Make it only 5 words. Don't include other message as this is for a web app.`,
-        },
-      ],
-    })
-    .then((result) => {
-      generatedTitle = result.data.choices[0].message.content;
-    });
-  return generatedTitle;
-};
-
 const summarizeTranscript = async (transcript) => {
   let summary = "";
   for (let i = 0; i < transcript.length; i++) {
@@ -52,18 +34,19 @@ const summarizeTranscript = async (transcript) => {
 };
 
 const getTitles = async (summary) => {
-  let generatedTitles = "";
+  let generatedTitles = [];
   let generatedDescription = "";
   let results = [];
+  let generatedTags = "";
   await openai
     .createChatCompletion({
       model: "gpt-3.5-turbo",
       messages: [
         {
           role: "user",
-          content: `Would you please send me 5 title ideas from a podcast summary? Write the guest name at the end of the titles.
+          content: `Would you please send me 5 title ideas from a podcast summary in array format? Write the guest name at the end of the titles.
           
-          Here are examples of our published titles, that you can use as reference. Please generate titles similar to this style. Use bullet format when sending the results.
+          Here are examples of our published titles, that you can use as reference. Please generate titles similar to this style. 
           • Learning Beyond the Classroom: From Pool Tech to Tech Solutions Engineer with [Guest Name]
           • Breaking into Code: How to Launch Your Software Engineering Career with No Experience with [Guest Name]
           • Future-Proof Your Career: Positioning Yourself for Success in the AI Era with [Guest Name]
@@ -82,7 +65,7 @@ const getTitles = async (summary) => {
     })
     .then((result) => {
       generatedTitles = result.data.choices[0].message.content;
-      results.push(generatedTitles);
+      results.push([generatedTitles]);
     });
   await openai
     .createChatCompletion({
@@ -90,9 +73,9 @@ const getTitles = async (summary) => {
       messages: [
         {
           role: "user",
-          content: `Would you please send me a podcast description from a podcast summary? Write in short concise paragraphs and separate using bullet points. Write like a native english speaker. 
+          content: `Would you please send me a podcast description from a podcast summary? The podcast name is 'Degree Free Podcast'.  Write in short concise paragraphs and separate using bullet points. Write like a native english speaker.Here's the summary: "${summary}"
           
-          Here are examples of our published descriptions that you can use as reference. Please generate the description similar to this style.
+          And, here are examples of our published descriptions that you can use as reference. Please generate the description similar to this style. Please send the result only as this is for a web app.
          Description 1: 
          "In this episode of Degree Free, get ready to be inspired by Matt Walters, a Technology Solutions Engineer who shares his “unconventional” path to success.
 
@@ -118,7 +101,7 @@ const getTitles = async (summary) => {
          "
          In this episode, join us as we sit down with AWS Software Engineer, Matthew Young, to delve into his inspiring journey of breaking into the tech industry without a traditional background in software engineering. If you're someone aspiring to enter the world of tech but don't know where to start, this episode is a goldmine of actionable advice and motivation.
 
-        In this episode we discuss:
+        Key Discussion Points:
 
         Matthew's Unconventional Path:
         How he transitioned from a finance degree to forging a successful career in software engineering. Learn about his unique trajectory, which led him from scoring an internship to leveraging platforms like Upwork to establish his presence as a freelancer before landing a role at AWS.
@@ -146,7 +129,7 @@ const getTitles = async (summary) => {
         "
         In this episode, we sit down with Garrett Graves, a software engineer at Twitch who has built a thriving career without a college degree. Garrett shares his valuable insights, practical advice, and proven steps for aspiring back end developers who are eager to kickstart their careers but don't hold a traditional degree.
 
-        In this episode, we talk about:
+        Key Discussion Points:
 
         - How to break into the software engineering industry, even without a college degree or work experience. Garret provides practical steps and resources to help individuals navigate their way through self-learning and gain the skills needed to succeed.
         - How to stand out and get hired as a software engineer. He shares strategies to make a strong impression on potential employers and increase your chances of securing a job.
@@ -157,8 +140,7 @@ const getTitles = async (summary) => {
 
         Enjoy the episode!"
           
-          Here's the summary: 
-          "${summary}"
+
           `,
         },
       ],
@@ -166,6 +148,22 @@ const getTitles = async (summary) => {
     .then((result) => {
       generatedDescription = result.data.choices[0].message.content;
       results.push(generatedDescription);
+    });
+
+  await openai
+    .createChatCompletion({
+      model: "gpt-3.5-turbo",
+      messages: [
+        {
+          role: "user",
+          content: `Would you please generate 10 youtube tags from a podcast summary? Please separate the tags by commas and make sure it's hyper-targeted. Only send the result as this is for an API. This is the summary : ${summary}
+          `,
+        },
+      ],
+    })
+    .then((result) => {
+      generatedTags = result.data.choices[0].message.content;
+      results.push(generatedTags);
     });
   return results;
 };

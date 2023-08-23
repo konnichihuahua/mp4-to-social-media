@@ -2,9 +2,9 @@ import React, { useEffect, useState } from "react";
 
 const FileUploadPodcast = ({
   setTitle,
-  setCaption,
-  setResultIsLoaded,
-  file,
+  setDescription,
+  setResultIsLoading,
+  setTags,
   setFile,
 }) => {
   const [transcript, setTranscript] = useState({});
@@ -37,7 +37,7 @@ const FileUploadPodcast = ({
     event.preventDefault();
     const separatedTranscripts = cutTranscript(transcript);
     console.log(separatedTranscripts);
-    setResultIsLoaded(false);
+    setResultIsLoading(true);
     await fetch("http://localhost:3000/transcript", {
       method: "POST",
       headers: {
@@ -47,10 +47,12 @@ const FileUploadPodcast = ({
     })
       .then((result) => result.json())
       .then((data) => {
-        console.log(data);
         setTitle(data[0]);
-        setCaption(data[1]);
-        setResultIsLoaded(true);
+        console.log(typeof data[0][0]);
+        console.log(data[0]);
+        setDescription(data[1]);
+        setTags(data[2]);
+        setResultIsLoading(false);
       });
   };
 
