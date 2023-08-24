@@ -1,12 +1,65 @@
 import React, { useState } from "react";
 
-const SocialMediaForm = ({ onSubmit }) => {
+const SocialMediaForm = ({
+  setCaption,
+  setTitle,
+  setResultIsLoading,
+  setTags,
+  epNumber,
+  setEpNumber,
+}) => {
+  function removeOuterQuotes(inputString) {
+    if (typeof inputString !== "string") {
+      throw new Error("Input must be a string");
+    }
+
+    const trimmedString = inputString.trim();
+
+    if (
+      trimmedString.length >= 2 &&
+      trimmedString[0] === '"' &&
+      trimmedString[trimmedString.length - 1] === '"'
+    ) {
+      return trimmedString.slice(1, -1);
+    }
+
+    return inputString;
+  }
+
+  const getTags = async (data) => {
+    await fetch(`http://localhost:3000/get/tags/${data}`)
+      .then((response) => response.json())
+      .then((data) => {
+        setTags(removeOuterQuotes(data.tags));
+        setResultIsLoading(false);
+      });
+  };
+  const getTitle = async (data) => {
+    await fetch(`http://localhost:3000/get/title/${data}`)
+      .then((response) => response.json())
+      .then((data) => {
+        setTitle(removeOuterQuotes(data.title));
+        setResultIsLoading(false);
+      });
+  };
+  const getCaption = async (data) => {
+    await fetch(`http://localhost:3000/get/description/${data}`)
+      .then((response) => response.json())
+      .then((data) => {
+        setCaption(removeOuterQuotes(data.description));
+        setResultIsLoading(false);
+      });
+  };
+
   const [description, setDescription] = useState("");
+
   const handleSubmit = (e) => {
     e.preventDefault();
     if (description.trim() !== "") {
-      onSubmit(description);
-      setDescription("");
+      getTitle(description);
+      getCaption(description);
+      getTags(description);
+      setResultIsLoading(true);
     }
   };
 
@@ -21,6 +74,15 @@ const SocialMediaForm = ({ onSubmit }) => {
           placeholder="Certifications vs college degrees"
           value={description}
           onChange={(e) => setDescription(e.target.value)}
+          required
+        />
+        <input
+          type="number"
+          id="episode-number"
+          className="text-black p-2"
+          placeholder="32"
+          value={epNumber}
+          onChange={(e) => setEpNumber(e.target.value)}
           required
         />
         <input

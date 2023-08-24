@@ -1,9 +1,6 @@
 import logo from "./logo.svg";
 import "./App.css";
-import SocialMediaForm from "./components/SocialMediaForm";
-import Results from "./components/Results";
-import Transcribe from "./components/Transcribe";
-import AtomicSpinner from "atomic-spinner";
+import Highlight from "./components/Highlight";
 import Podcast from "./components/Podcast";
 
 import { useState } from "react";
@@ -11,8 +8,23 @@ import { useState } from "react";
 function App() {
   const [title, setTitle] = useState("------------------");
   const [caption, setCaption] = useState("------------------");
-  const [showForm, setShowForm] = useState("video");
-  const [resultIsLoaded, setResultIsLoaded] = useState(true);
+  const [showForm, setShowForm] = useState("highlights");
+  const [resultIsLoaded, setResultIsLoaded] = useState(false);
+  const [isMenuOpen, setIsMenuOpen] = useState(true);
+  const [isModalOpen, setIsModalOpen] = useState(false);
+  const [highlightIsActive, setHighlightIsActive] = useState(true);
+  const highlightedClass =
+    "block py-2 pl-3 pr-4 text-white bg-blue-700 rounded md:bg-transparent md:text-blue-700 md:p-0 md:dark:text-blue-500";
+  const unHighlightedClass =
+    "block py-2 pl-3 pr-4 text-white rounded md:bg-transparent md:text-blue-700 md:p-0 md:dark:text-blue-500";
+  const toggleMenu = () => {
+    setIsMenuOpen(!isMenuOpen);
+    console.log("roar");
+  };
+
+  const toggleModal = () => {
+    setIsModalOpen(!isModalOpen);
+  };
 
   const onSubmit = (data) => {
     setResultIsLoaded(false);
@@ -41,7 +53,7 @@ function App() {
           <a className="flex items-center" href="/">
             <img src={logo} className="h-12" alt="Clip2Gram Logo" />
             <span className="self-center text-2xl font-semibold whitespace-nowrap dark:text-white">
-              Clip2Gram
+              DF AI Tools
             </span>
           </a>
           <div className="flex md:order-2">
@@ -56,7 +68,8 @@ function App() {
               type="button"
               className="inline-flex items-center p-2 w-10 h-10 justify-center text-sm text-gray-500 rounded-lg md:hidden hover:bg-gray-100 focus:outline-none focus:ring-2 focus:ring-gray-200 dark:text-gray-400 dark:hover:bg-gray-700 dark:focus:ring-gray-600"
               aria-controls="navbar-sticky"
-              aria-expanded="false"
+              onClick={toggleModal}
+              aria-expanded={isMenuOpen}
             >
               <span className="sr-only">Open main menu</span>
               <svg
@@ -80,42 +93,90 @@ function App() {
             className="items-center justify-between hidden w-full md:flex md:w-auto md:order-1"
             id="navbar-sticky"
           >
-            <ul className="flex flex-col p-4 md:p-0 mt-4 font-medium border border-gray-100 rounded-lg bg-gray-50 md:flex-row md:space-x-8 md:mt-0 md:border-0 md:bg-white dark:bg-gray-800 md:dark:bg-gray-900 dark:border-gray-700">
-              <li onClick={() => setShowForm("video")}>
-                <b
-                  className="block py-2 pl-3 pr-4 text-white bg-blue-700 rounded md:bg-transparent md:text-blue-700 md:p-0 md:dark:text-blue-500"
-                  aria-current="page"
+            {isMenuOpen && (
+              <ul className="flex flex-col p-4 md:p-0 mt-4 font-medium border border-gray-100 rounded-lg bg-gray-50 md:flex-row md:space-x-8 md:mt-0 md:border-0 md:bg-white dark:bg-gray-800 md:dark:bg-gray-900 dark:border-gray-700">
+                <li
+                  onClick={() => {
+                    setShowForm("highlights");
+                    setHighlightIsActive(true);
+                  }}
                 >
-                  Generate From Video
-                </b>
-              </li>
-              <li onClick={() => setShowForm("text")}>
-                <b className="block py-2 pl-3 pr-4 text-gray-900 rounded hover:bg-gray-100 md:hover:bg-transparent md:hover:text-blue-700 md:p-0 md:dark:hover:text-blue-500 dark:text-white dark:hover:bg-gray-700 dark:hover:text-white md:dark:hover:bg-transparent dark:border-gray-700">
-                  Generate From Text
-                </b>
-              </li>
-              <li onClick={() => setShowForm("podcast")}>
-                <b className="block py-2 pl-3 pr-4 text-gray-900 rounded hover:bg-gray-100 md:hover:bg-transparent md:hover:text-blue-700 md:p-0 md:dark:hover:text-blue-500 dark:text-white dark:hover:bg-gray-700 dark:hover:text-white md:dark:hover:bg-transparent dark:border-gray-700">
-                  Generate From Podcast
-                </b>
-              </li>
-            </ul>
+                  <b
+                    className={
+                      highlightIsActive ? "text-blue-500" : "text-white"
+                    }
+                    aria-current="page"
+                  >
+                    Highlights
+                  </b>
+                </li>
+
+                <li
+                  onClick={() => {
+                    setShowForm("podcast");
+                    setHighlightIsActive(false);
+                  }}
+                >
+                  <b
+                    className={
+                      !highlightIsActive ? "text-blue-500" : "text-white"
+                    }
+                  >
+                    Podcast
+                  </b>
+                </li>
+              </ul>
+            )}
           </div>
         </div>
+        {isModalOpen && (
+          <div className="modal">
+            <div className="modal-content">
+              <ul className="flex flex-col p-4 md:p-0 mt-4 font-medium border border-gray-100 rounded-lg bg-gray-50 md:flex-row md:space-x-8 md:mt-0 md:border-0 md:bg-white dark:bg-gray-800 md:dark:bg-gray-900 dark:border-gray-700">
+                <li
+                  onClick={() => {
+                    setShowForm("highlights");
+                    setHighlightIsActive(true);
+
+                    toggleModal();
+                  }}
+                >
+                  <b
+                    className={
+                      highlightIsActive ? highlightedClass : unHighlightedClass
+                    }
+                    aria-current="page"
+                  >
+                    Highlights
+                  </b>
+                </li>
+
+                <li
+                  onClick={() => {
+                    setShowForm("podcast");
+                    setHighlightIsActive(false);
+
+                    toggleModal();
+                  }}
+                >
+                  <b
+                    className={
+                      highlightIsActive ? unHighlightedClass : highlightedClass
+                    }
+                  >
+                    Podcast
+                  </b>
+                </li>
+              </ul>
+              <button onClick={toggleModal}>Close Modal</button>
+            </div>
+          </div>
+        )}
       </nav>
 
       <div className="min-w-min main-content mt-5 flex flex-col md:flex-row items-center lg:flex-row">
-        {showForm === "text" ? (
-          <SocialMediaForm
-            onSubmit={onSubmit}
-            setResultIsLoaded={setResultIsLoaded}
-          />
-        ) : showForm === "video" ? (
-          <Transcribe
-            setCaption={setCaption}
-            setTitle={setTitle}
-            setResultIsLoaded={setResultIsLoaded}
-          />
+        {showForm === "highlights" ? (
+          <Highlight />
         ) : showForm === "podcast" ? (
           <Podcast
             setCaption={setCaption}
@@ -123,15 +184,6 @@ function App() {
             setResultIsLoaded={setResultIsLoaded}
           />
         ) : null}
-
-        {resultIsLoaded ? (
-          <Results title={title} caption={caption} />
-        ) : (
-          <div className="loader-container flex justify-center items-center">
-            <AtomicSpinner />
-            <p> Generating Magic...</p>
-          </div>
-        )}
       </div>
     </div>
   );

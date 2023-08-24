@@ -20,6 +20,8 @@ async function transcribeMp4(audio_buffer) {
   let generatedText = "";
   let generatedCaption = "";
   let generatedTitle = "";
+  let generatedTags = "";
+  let summary = "";
   let result = [];
   const openai = new OpenAIApi(configuration);
   const audioReadStream = Readable.from(audio_buffer);
@@ -29,14 +31,39 @@ async function transcribeMp4(audio_buffer) {
     .then((result) => {
       generatedText = result.data.text;
     });
-
   await openai
     .createChatCompletion({
       model: "gpt-3.5-turbo",
       messages: [
         {
           role: "user",
-          content: `Write a 1 sentence tiktok caption from a transcript. Write like a native english speaker. Then add relevant hashtags. Hashtags must be in lowercase. Add the hashtag #degreefree, #college, #collegetips, #jobs, #jobsearch, #jobhunt, #jobhunting. The transcript is: "${generatedText}". `,
+          content: `Would you please summarize ${generatedText} so that it can be processed by GPT for generating titles, captions and hashtags?`,
+        },
+      ],
+    })
+    .then((result) => {
+      summary = result.data.choices[0].message.content;
+    });
+  await openai
+    .createChatCompletion({
+      model: "gpt-3.5-turbo",
+      messages: [
+        {
+          role: "user",
+          content: `Write a youtube shorts title about this transcript: "${generatedText}". Make it only 5 words. Don't include other message as this is for a web app.`,
+        },
+      ],
+    })
+    .then((result) => {
+      generatedTitle = result.data.choices[0].message.content;
+    });
+  await openai
+    .createChatCompletion({
+      model: "gpt-3.5-turbo",
+      messages: [
+        {
+          role: "user",
+          content: `Write a 1 sentence tiktok caption about ${summary}. This is for an episode sneak peek and don't use emojis. Write like a native english speaker and do not include hashtags.`,
         },
       ],
     })
@@ -50,14 +77,14 @@ async function transcribeMp4(audio_buffer) {
       messages: [
         {
           role: "user",
-          content: `Write a youtube shorts title about ${generatedText}. Make it only 5 words. Don't include other message as this is for a web app.${generatedText}`,
+          content: `Write 5 relevant hashtags about ${summary}. The hashtags must be in lowercase and separate each hashtag with a space.`,
         },
       ],
     })
     .then((result) => {
-      generatedTitle = result.data.choices[0].message.content;
+      generatedTags = result.data.choices[0].message.content;
     });
-  return (result = [generatedTitle, generatedCaption]);
+  return (result = [generatedTitle, generatedCaption, generatedTags]);
 }
 
 router.get("/", (req, res) => {
