@@ -3,6 +3,7 @@ import { useState } from "react";
 import FileUploadHighlight from "./FileUploadHighlight";
 import HighlightResults from "./HighlightResults";
 import AtomicSpinner from "atomic-spinner";
+import SocialMediaForm from "./SocialMediaForm";
 
 function Highlight() {
   const [file, setFile] = useState(null);
@@ -11,14 +12,21 @@ function Highlight() {
   const [resultIsLoading, setResultIsLoading] = useState(false);
 
   return (
-    <div className="mt-7">
-      <FileUploadHighlight
-        setCaption={setCaption}
-        file={file}
-        setFile={setFile}
-        setTitle={setTitle}
-        setResultIsLoading={setResultIsLoading}
-      />
+    <div className="mt-7 flex items-center justify-center">
+      <div>
+        <FileUploadHighlight
+          setCaption={setCaption}
+          file={file}
+          setFile={setFile}
+          setTitle={setTitle}
+          setResultIsLoading={setResultIsLoading}
+        />
+        <SocialMediaForm
+          setCaption={setCaption}
+          setTitle={setTitle}
+          setResultIsLoading={setResultIsLoading}
+        />
+      </div>
       {!resultIsLoading ? (
         <HighlightResults title={title} caption={caption} />
       ) : (

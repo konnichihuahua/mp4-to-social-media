@@ -6,10 +6,18 @@ import AtomicSpinner from "atomic-spinner";
 
 function Podcast() {
   const [file, setFile] = useState(null);
-  const [title, setTitle] = useState([]);
-  const [description, setDescription] = useState("------------------");
+  const [title, setTitle] = useState(["---------------"]);
+  const [description, setDescription] = useState({
+    intro: "------------------",
+    key_discussion_points: [
+      "------------------",
+      "------------------",
+      "------------------",
+    ],
+    outro: "------------------",
+  });
+  const [fileUploaded, setFileUploaded] = useState(false);
   const [tags, setTags] = useState("------------------");
-  const [showNotes, setShowNotes] = useState("------------------");
   const [resultIsLoading, setResultIsLoading] = useState(false);
 
   return (
@@ -21,15 +29,12 @@ function Podcast() {
         setTitle={setTitle}
         setResultIsLoading={setResultIsLoading}
         setTags={setTags}
+        setFileUploaded={setFileUploaded}
+        fileUploaded={fileUploaded}
       />
 
       {!resultIsLoading ? (
-        <PodcastResults
-          description={description}
-          title={title}
-          tags={tags}
-          showNotes={showNotes}
-        />
+        <PodcastResults description={description} title={title} tags={tags} />
       ) : (
         <div className="loader-container flex justify-center items-center">
           <AtomicSpinner />

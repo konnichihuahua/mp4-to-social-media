@@ -6,8 +6,11 @@ const FileUploadPodcast = ({
   setResultIsLoading,
   setTags,
   setFile,
+  fileUploaded,
+  setFileUploaded,
 }) => {
   const [transcript, setTranscript] = useState({});
+
   const handleFileChange = (event) => {
     event.preventDefault();
     const file = event.target.files[0];
@@ -18,6 +21,7 @@ const FileUploadPodcast = ({
     reader.onload = function () {
       const textFromFile = reader.result;
       setTranscript(textFromFile);
+      setFileUploaded(true);
     };
   };
 
@@ -36,7 +40,7 @@ const FileUploadPodcast = ({
   const readFile = async (event) => {
     event.preventDefault();
     const separatedTranscripts = cutTranscript(transcript);
-    console.log(separatedTranscripts);
+
     setResultIsLoading(true);
     await fetch("http://localhost:3000/transcript", {
       method: "POST",
@@ -47,12 +51,12 @@ const FileUploadPodcast = ({
     })
       .then((result) => result.json())
       .then((data) => {
-        setTitle(data[0]);
-        console.log(typeof data[0][0]);
-        console.log(data[0]);
-        setDescription(data[1]);
+        setTitle(JSON.parse(data[0]));
+        console.log(data[1]);
+        setDescription(JSON.parse(data[1]));
         setTags(data[2]);
         setResultIsLoading(false);
+        setFileUploaded(false);
       });
   };
 
@@ -74,11 +78,14 @@ const FileUploadPodcast = ({
             accept=".txt"
             onChange={handleFileChange}
           />
-          <input
-            type="submit"
-            value="GENERATE"
-            className="text-xl min-w-full text-white bg-blue-950 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 rounded-lg px-4 py-2 text-center mr-3 md:mr-0 dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800"
-          />
+
+          {fileUploaded && (
+            <input
+              type="submit"
+              value="GENERATE"
+              className="text-xl min-w-full text-white bg-blue-950 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 rounded-lg px-4 py-2 text-center mr-3 md:mr-0 dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800"
+            />
+          )}
         </label>
       </form>
     </div>

@@ -34,8 +34,8 @@ const summarizeTranscript = async (transcript) => {
 };
 
 const getTitles = async (summary) => {
-  let generatedTitles = [];
-  let generatedDescription = "";
+  let generatedTitles = {};
+  let generatedDescription = {};
   let results = [];
   let generatedTags = "";
   await openai
@@ -44,7 +44,7 @@ const getTitles = async (summary) => {
       messages: [
         {
           role: "user",
-          content: `Would you please send me 5 title ideas from a podcast summary in array format? Write the guest name at the end of the titles.
+          content: `Would you please send me 5 title ideas from a podcast summary in array format? Each title should be a child of an array. Write the guest name at the end of the titles.
           
           Here are examples of our published titles, that you can use as reference. Please generate titles similar to this style. 
           • Learning Beyond the Classroom: From Pool Tech to Tech Solutions Engineer with [Guest Name]
@@ -65,6 +65,7 @@ const getTitles = async (summary) => {
     })
     .then((result) => {
       generatedTitles = result.data.choices[0].message.content;
+      console.log(generatedTitles);
       results.push([generatedTitles]);
     });
   await openai
@@ -73,80 +74,25 @@ const getTitles = async (summary) => {
       messages: [
         {
           role: "user",
-          content: `Would you please send me a podcast description from a podcast summary? The podcast name is 'Degree Free Podcast'.  Write in short concise paragraphs and separate using bullet points. Write like a native english speaker.Here's the summary: "${summary}"
+          content: `Would you please send me a podcast description in JSON format from a podcast summary with intro, key discussion points and outro? Write like a native english speaker. The podcast name is 'Degree Free Podcast'. Make it short and concise. Here's the summary: "${summary}"
+          Here are examples that you can use as reference:
+          { 
+            "intro": "Join us for an insightful episode as we unravel the journey of Colton Sakamoto, co-founder and former CEO of Infection Points, and currently the Chief Party Officer at Office Party. In this jam-packed conversation, Colton takes us through his remarkable path to success, from humble beginnings to building thriving ventures.  Colton Sakamoto is the Chief Party Officer at The Office Party. Prior to The Office Party, he co-founded Inflection Points, an employment-focused company that helped 1,500+ job seekers start new careers.",
+            "key_discussion_points": ['How Colton started his entrepreneurial adventure from the comfort of his childhood bedroom, overcoming challenges and eventually selling his company, Inflection Points.', ' Valuable insights into the world of content creation and its synergies with entrepreneurship, as Colton shares his experiences transitioning from a content creator to co-founding Office Party.', 'The impact of Colton's decision to pursue an MBA on his career trajectory, with candid reflections if it really added value to his professional growth and decision-making.', 'Strategies and secrets behind building a loyal following and nurturing a thriving community for aspiring entrepreneurs and content creators.', 'A glimpse into Colton's visionary ideas for the future of Office Party, including innovative approaches to monetization and platform expansion.'],
+            "outro": "We dive deep into the nuances of entrepreneurship, content creation, and starting a business from scratch. Whether you're an experienced business owner or contemplating starting a side hustle, there's something valuable for everyone in this episode. Don't miss the chance to learn from Colton Sakamoto’s journey and insights to elevate your own path to success. Enjoy the episode!"
+          }
           
-          And, here are examples of our published descriptions that you can use as reference. Please generate the description similar to this style. Please send the result only as this is for a web app.
-         Description 1: 
-         "In this episode of Degree Free, get ready to be inspired by Matt Walters, a Technology Solutions Engineer who shares his “unconventional” path to success.
-
-         Join us as we go over his journey, starting from humble beginnings as a pool technician and HVAC technician, and ultimately becoming a 6-figure engineer.
-         
-         Throughout our conversation, Matt shares invaluable insights into his career trajectory and the invaluable lessons he learned along the way.
-         
-         Key Discussion Points:
-         
-         - Breaking Through Boundaries: Matt Walters defied societal norms and traditional educational pathways to forge his unique career in technology solutions engineering, no degree needed.
-         - The Evolution of a Career: Learn about the challenges and opportunities Matt encountered during his transition from working on trades, as a hands-on technician to a high-paying engineering role.
-         - Learning and Unlearning: Discover the secrets behind Matt's success, and how he describes how being a good engineer means unlearning how you were taught to learn in school.
-         - Career Growth Strategies: Matt provides valuable tips for anyone aspiring to advance their careers and break into the tech industry without a formal degree.
-         - Overcoming Obstacles: Hear about the obstacles Matt faced and how he turned them into stepping stones towards achieving his professional goals.
-         
-         Listen to Matt’s story, a testament to the power of determination and perseverance.
-         
-         Don't miss this engaging conversation with a remarkable individual who proves that anything is possible with the right mindset and the courage to forge your own path.
-         
-         Enjoy the episode!" 
-
-         Description 2: 
-         "
-         In this episode, join us as we sit down with AWS Software Engineer, Matthew Young, to delve into his inspiring journey of breaking into the tech industry without a traditional background in software engineering. If you're someone aspiring to enter the world of tech but don't know where to start, this episode is a goldmine of actionable advice and motivation.
-
-        Key Discussion Points:
-
-        Matthew's Unconventional Path:
-        How he transitioned from a finance degree to forging a successful career in software engineering. Learn about his unique trajectory, which led him from scoring an internship to leveraging platforms like Upwork to establish his presence as a freelancer before landing a role at AWS.
-
-        Non-Tech Companies as a Stepping Stone:
-        Understand why Matthew advocates for breaking into the tech industry by first working at "non-tech companies." He shares valuable insights into how these experiences can offer valuable skills and perspectives that prove invaluable in the tech world and how it can be your way to getting work at tech companies.
-
-        Becoming a Software Engineer without a Degree or Experience:
-        Matthew's story is an encouraging testament to aspiring software engineers without formal degrees or prior experience. Tune in as he reveals the key strategies and resources that helped him overcome challenges and build a solid foundation in the tech realm.
-
-        Contracting vs. Freelancing:
-        Get a detailed comparison of contracting and freelancing in the tech industry. Matthew shares his personal experiences and offers guidance on how to decide which path might be more suitable for your career goals.
-
-        Embracing AI in a Changing World:
-        Matthew sheds light on the importance of embracing AI and its impact on the ever-changing world. As technology continues to progress, he emphasizes the value of staying adaptable and open to new advancements.
-
-        Finding Your Niche in Tech:
-        Choosing a specific direction within the vast tech landscape can be overwhelming. Matthew provides practical tips on how to discover your passion and decide on a tech path that aligns with your interests and strengths.
-
-        Join us for this thought-provoking episode, filled with invaluable advice, and the wisdom of an accomplished software engineer who defied the odds to carve his own path in the tech industry.
-
-        Enjoy the episode!"
-
-        Description 3: 
-        "
-        In this episode, we sit down with Garrett Graves, a software engineer at Twitch who has built a thriving career without a college degree. Garrett shares his valuable insights, practical advice, and proven steps for aspiring back end developers who are eager to kickstart their careers but don't hold a traditional degree.
-
-        Key Discussion Points:
-
-        - How to break into the software engineering industry, even without a college degree or work experience. Garret provides practical steps and resources to help individuals navigate their way through self-learning and gain the skills needed to succeed.
-        - How to stand out and get hired as a software engineer. He shares strategies to make a strong impression on potential employers and increase your chances of securing a job.
-        - Garrett's personal journey from dropping out of college to securing a position at Twitch, a leading technology company. He discusses the challenges he faced along the way and the lessons he learned, providing inspiration and motivation to those who may be considering alternative education paths.
-        - Invaluable career advice from Garrett for individuals just starting their careers or looking to break into the software engineering industry. He shares insights on building a strong professional network, seeking mentorship, and staying motivated in the face of challenges.
-
-        Tune in to this episode and gain valuable insights and guidance from Garrett Graves, as he shares his journey, tips, and advice to help aspiring software engineers carve their own path to success in the dynamic and ever-evolving world of technology.
-
-        Enjoy the episode!"
-          
-
-          `,
+          --------
+          Send the result in the following JSON structure
+          { "intro": "..",
+            "key_discussion_points": [],
+            "outro": ".."}`,
         },
       ],
     })
     .then((result) => {
       generatedDescription = result.data.choices[0].message.content;
+      console.log(generatedDescription);
       results.push(generatedDescription);
     });
 
@@ -156,8 +102,7 @@ const getTitles = async (summary) => {
       messages: [
         {
           role: "user",
-          content: `Would you please generate 10 youtube tags from a podcast summary? Please separate the tags by commas and make sure it's hyper-targeted. Only send the result as this is for an API. This is the summary : ${summary}
-          `,
+          content: `Here's a podcast summary: "${summary}". Would you please generate 10 youtube tags from that summary? Write 10 youtube tags only. Make sure it's hyper-targeted. Separate the results by comma. Use all lowercase. Send the result only as this is for a web app.`,
         },
       ],
     })

@@ -8,6 +8,23 @@ const FileUploadHighlight = ({
   file,
   setFile,
 }) => {
+  function removeOuterQuotes(inputString) {
+    if (typeof inputString !== "string") {
+      throw new Error("Input must be a string");
+    }
+
+    const trimmedString = inputString.trim();
+
+    if (
+      trimmedString.length >= 2 &&
+      trimmedString[0] === '"' &&
+      trimmedString[trimmedString.length - 1] === '"'
+    ) {
+      return trimmedString.slice(1, -1);
+    }
+
+    return inputString;
+  }
   const ffmpegRef = useRef(new FFmpeg());
 
   const handleFileChange = (event) => {
@@ -47,8 +64,8 @@ const FileUploadHighlight = ({
     })
       .then((result) => result.json())
       .then((data) => {
-        setTitle(data.caption[0]);
-        setCaption(data.caption[1]);
+        setTitle(removeOuterQuotes(data.caption[0]));
+        setCaption(removeOuterQuotes(data.caption[1]));
         setResultIsLoading(false);
       });
   };
