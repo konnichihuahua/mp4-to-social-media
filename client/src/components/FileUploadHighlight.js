@@ -7,6 +7,8 @@ const FileUploadHighlight = ({
   setResultIsLoading,
   file,
   setFile,
+  setEpNumber,
+  setTags,
 }) => {
   function removeOuterQuotes(inputString) {
     if (typeof inputString !== "string") {
@@ -26,11 +28,20 @@ const FileUploadHighlight = ({
     return inputString;
   }
   const ffmpegRef = useRef(new FFmpeg());
-
+  function extractLastNumber(filename) {
+    const regex = /(\d+)\.mp4$/;
+    const match = filename.match(regex);
+    if (match) {
+      return parseInt(match[1]);
+    } else {
+      return null;
+    }
+  }
   const handleFileChange = (event) => {
     event.preventDefault();
     const file = event.target.files[0];
     setFile(file);
+    setEpNumber(extractLastNumber(file.name));
   };
   const load = async () => {
     const baseURL = "https://unpkg.com/@ffmpeg/core@0.12.1/dist/umd";
@@ -58,7 +69,7 @@ const FileUploadHighlight = ({
     const data = await ffmpeg.readFile("output.mp3");
     const formData = new FormData(event.target);
     formData.append("file", new Blob([data.buffer]));
-    await fetch("http://localhost:3000/mp4", {
+    await fetch("/mp4", {
       method: "POST",
       body: formData,
     })
@@ -66,6 +77,7 @@ const FileUploadHighlight = ({
       .then((data) => {
         setTitle(removeOuterQuotes(data.caption[0]));
         setCaption(removeOuterQuotes(data.caption[1]));
+        setTags(removeOuterQuotes(data.caption[2]));
         setResultIsLoading(false);
       });
   };

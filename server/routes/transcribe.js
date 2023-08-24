@@ -19,6 +19,7 @@ async function transcribe(audio_file) {
   let generatedText = "";
   let generatedCaption = "";
   let generatedTitle = "";
+  let generatedTags = "";
   let result = [];
   const openai = new OpenAIApi(configuration);
   const audioBuffer = audio_file.buffer;
@@ -57,7 +58,20 @@ async function transcribe(audio_file) {
     .then((result) => {
       generatedTitle = result.data.choices[0].message.content;
     });
-  return (result = [generatedTitle, generatedCaption]);
+  await openai
+    .createChatCompletion({
+      model: "gpt-3.5-turbo",
+      messages: [
+        {
+          role: "user",
+          content: `Write 5 relevant hashtags about ${generatedText}. Add the hashtag #degreefree, #college, #collegetips, #jobs, #jobsearch, #jobhunt, #jobhunting at the end. Use all lowercase and separate each hashtag with a space.`,
+        },
+      ],
+    })
+    .then((result) => {
+      generatedTags = result.data.choices[0].message.content;
+    });
+  return (result = [generatedTitle, generatedCaption, generatedTags]);
 }
 
 router.get("/", (req, res) => {

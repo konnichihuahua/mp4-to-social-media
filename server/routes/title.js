@@ -34,7 +34,7 @@ const getDescription = async (data) => {
       messages: [
         {
           role: "user",
-          content: `Write a 1 sentence tiktok caption about ${data}. Write like a native english speaker. Then add relevant hashtags. Hashtags must be in lowercase. Add the hashtag #degreefree, #college, #collegetips, #jobs, #jobsearch, #jobhunt, #jobhunting.`,
+          content: `Write a 1 sentence tiktok caption about ${data}. This is for an episode sneak peek and don't use emojis. Write like a native english speaker and do not include hashtags.`,
         },
       ],
     })
@@ -42,6 +42,24 @@ const getDescription = async (data) => {
       generatedDescription = result.data.choices[0].message.content;
     });
   return generatedDescription;
+};
+
+const getTags = async (data) => {
+  let generatedTags = "";
+  await openai
+    .createChatCompletion({
+      model: "gpt-3.5-turbo",
+      messages: [
+        {
+          role: "user",
+          content: `Write 5 relevant hashtags about ${data}.  The hashtags must be in lowercase and separate each hashtag with a space.`,
+        },
+      ],
+    })
+    .then((result) => {
+      generatedTags = result.data.choices[0].message.content;
+    });
+  return generatedTags;
 };
 const openai = new OpenAIApi(configuration);
 router.use(cors());
@@ -51,5 +69,9 @@ router.get("/title/:data", async (req, res) => {
 
 router.get("/description/:data", async (req, res) => {
   res.json({ description: await getDescription(req.params.data) });
+});
+
+router.get("/tags/:data", async (req, res) => {
+  res.json({ tags: await getTags(req.params.data) });
 });
 export default router;

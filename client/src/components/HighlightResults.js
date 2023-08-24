@@ -1,6 +1,10 @@
 import React from "react";
 import { AiFillCopy } from "react-icons/ai";
-function Results({ title, caption }) {
+function Results({ title, caption, tags, epNumber }) {
+  const defaultTags =
+    " #degreefree, #college, #collegetips, #jobs, #jobsearch, #jobhunt, #jobhunting";
+  const description =
+    caption + "" + " (DF#" + epNumber + ")" + " " + tags + defaultTags;
   const copyContent = async (target) => {
     try {
       await navigator.clipboard.writeText(target);
@@ -31,11 +35,11 @@ function Results({ title, caption }) {
             Description
           </h3>
           <div className="flex justify-center items-center">
-            <div>{caption}</div>
+            <div>{description}</div>
             <div>
               <AiFillCopy
                 className="h-10 w-10"
-                onClick={() => copyContent(caption)}
+                onClick={() => copyContent(description)}
               />
             </div>
           </div>

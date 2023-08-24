@@ -10,7 +10,8 @@ function Highlight() {
   const [title, setTitle] = useState("------------------");
   const [caption, setCaption] = useState("------------------");
   const [resultIsLoading, setResultIsLoading] = useState(false);
-
+  const [tags, setTags] = useState("");
+  const [epNumber, setEpNumber] = useState("");
   return (
     <div className="mt-7 flex items-center justify-center">
       <div>
@@ -20,15 +21,27 @@ function Highlight() {
           setFile={setFile}
           setTitle={setTitle}
           setResultIsLoading={setResultIsLoading}
+          setEpNumber={setEpNumber}
+          setTags={setTags}
         />
+        <div className="m-3"> --- OR --- </div>
         <SocialMediaForm
           setCaption={setCaption}
           setTitle={setTitle}
           setResultIsLoading={setResultIsLoading}
+          setTags={setTags}
+          epNumber={epNumber}
+          setEpNumber={setEpNumber}
         />
       </div>
       {!resultIsLoading ? (
-        <HighlightResults title={title} caption={caption} />
+        <HighlightResults
+          title={title}
+          caption={caption}
+          tags={tags}
+          epNumber={epNumber}
+          resultIsLoading={resultIsLoading}
+        />
       ) : (
         <div className="loader-container flex justify-center items-center">
           <AtomicSpinner />

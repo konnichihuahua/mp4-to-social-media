@@ -1,6 +1,13 @@
 import React, { useState } from "react";
 
-const SocialMediaForm = ({ setCaption, setTitle, setResultIsLoading }) => {
+const SocialMediaForm = ({
+  setCaption,
+  setTitle,
+  setResultIsLoading,
+  setTags,
+  epNumber,
+  setEpNumber,
+}) => {
   function removeOuterQuotes(inputString) {
     if (typeof inputString !== "string") {
       throw new Error("Input must be a string");
@@ -18,27 +25,41 @@ const SocialMediaForm = ({ setCaption, setTitle, setResultIsLoading }) => {
 
     return inputString;
   }
-  const getTitle = (data) => {
-    fetch(`https://fine-shorts-tuna.cyclic.app/get/title/${data}`)
+
+  const getTags = async (data) => {
+    await fetch(`http://localhost:3000/get/tags/${data}`)
       .then((response) => response.json())
-      .then((data) => setTitle(removeOuterQuotes(data.title)));
+      .then((data) => {
+        setTags(removeOuterQuotes(data.tags));
+        setResultIsLoading(false);
+      });
   };
-  const getCaption = (data) => {
-    fetch(`https://fine-shorts-tuna.cyclic.app/get/description/${data}`)
+  const getTitle = async (data) => {
+    await fetch(`http://localhost:3000/get/title/${data}`)
+      .then((response) => response.json())
+      .then((data) => {
+        setTitle(removeOuterQuotes(data.title));
+        setResultIsLoading(false);
+      });
+  };
+  const getCaption = async (data) => {
+    await fetch(`http://localhost:3000/get/description/${data}`)
       .then((response) => response.json())
       .then((data) => {
         setCaption(removeOuterQuotes(data.description));
         setResultIsLoading(false);
       });
   };
+
   const [description, setDescription] = useState("");
+
   const handleSubmit = (e) => {
     e.preventDefault();
     if (description.trim() !== "") {
-      setDescription("");
-      setResultIsLoading(true);
       getTitle(description);
       getCaption(description);
+      getTags(description);
+      setResultIsLoading(true);
     }
   };
 
@@ -53,6 +74,15 @@ const SocialMediaForm = ({ setCaption, setTitle, setResultIsLoading }) => {
           placeholder="Certifications vs college degrees"
           value={description}
           onChange={(e) => setDescription(e.target.value)}
+          required
+        />
+        <input
+          type="number"
+          id="episode-number"
+          className="text-black p-2"
+          placeholder="32"
+          value={epNumber}
+          onChange={(e) => setEpNumber(e.target.value)}
           required
         />
         <input
