@@ -69,7 +69,7 @@ const FileUploadHighlight = ({
     const data = await ffmpeg.readFile("output.mp3");
     const formData = new FormData(event.target);
     formData.append("file", new Blob([data.buffer]));
-    await fetch("/mp4", {
+    await fetch("http://localhost:3000/mp4", {
       method: "POST",
       body: formData,
     })

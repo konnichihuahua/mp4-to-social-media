@@ -6,10 +6,7 @@ import Podcast from "./components/Podcast";
 import { useState } from "react";
 
 function App() {
-  const [title, setTitle] = useState("------------------");
-  const [caption, setCaption] = useState("------------------");
   const [showForm, setShowForm] = useState("highlights");
-  const [resultIsLoaded, setResultIsLoaded] = useState(false);
   const [isMenuOpen, setIsMenuOpen] = useState(true);
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [highlightIsActive, setHighlightIsActive] = useState(true);
@@ -24,26 +21,6 @@ function App() {
 
   const toggleModal = () => {
     setIsModalOpen(!isModalOpen);
-  };
-
-  const onSubmit = (data) => {
-    setResultIsLoaded(false);
-    getTitle(data);
-    getCaption(data);
-  };
-
-  const getTitle = (data) => {
-    fetch(`https://fine-shorts-tuna.cyclic.app/get/title/${data}`)
-      .then((response) => response.json())
-      .then((data) => setTitle(data.title));
-  };
-  const getCaption = (data) => {
-    fetch(`https://fine-shorts-tuna.cyclic.app/get/description/${data}`)
-      .then((response) => response.json())
-      .then((data) => {
-        setCaption(data.description);
-        setResultIsLoaded(true);
-      });
   };
 
   return (
@@ -178,11 +155,7 @@ function App() {
         {showForm === "highlights" ? (
           <Highlight />
         ) : showForm === "podcast" ? (
-          <Podcast
-            setCaption={setCaption}
-            setTitle={setTitle}
-            setResultIsLoaded={setResultIsLoaded}
-          />
+          <Podcast />
         ) : null}
       </div>
     </div>

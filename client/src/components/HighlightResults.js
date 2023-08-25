@@ -4,7 +4,7 @@ function Results({ title, caption, tags, epNumber }) {
   const defaultTags =
     " #degreefree, #college, #collegetips, #jobs, #jobsearch, #jobhunt, #jobhunting";
   const description =
-    caption + "" + " (DF#" + epNumber + ")" + " " + tags + defaultTags;
+    caption + " " + " (DF#" + epNumber + ")" + " " + tags + defaultTags;
   const copyContent = async (target) => {
     try {
       await navigator.clipboard.writeText(target);

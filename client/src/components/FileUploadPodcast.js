@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useState } from "react";
 
 const FileUploadPodcast = ({
   setTitle,
@@ -42,7 +42,7 @@ const FileUploadPodcast = ({
     const separatedTranscripts = cutTranscript(transcript);
 
     setResultIsLoading(true);
-    await fetch("/transcript", {
+    await fetch("http://localhost:3000/transcript", {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
