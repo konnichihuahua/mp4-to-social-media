@@ -4,6 +4,7 @@ import transcribeRoute from "./server/routes/transcribe.js";
 import transcribeMp4Route from "./server/routes/transcribemp4.js";
 import transcribePodcastRoute from "./server/routes/podcast.js";
 import transcriptRoute from "./server/routes/transcript.js";
+import showNotesRoute from "./server/routes/showNotes.js";
 import path from "path";
 import { fileURLToPath } from "url";
 import bodyParser from "body-parser";
@@ -21,6 +22,7 @@ app.use("/transcribe", transcribeRoute);
 app.use("/mp4", transcribeMp4Route);
 app.use("/podcast", transcribePodcastRoute);
 app.use("/transcript", transcriptRoute);
+app.use("/shownotes", showNotesRoute);
 app.use(express.static(path.join(__dirname, "./client/build")));
 app.get("*", function (_, res) {
   res.sendFile(

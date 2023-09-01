@@ -2,11 +2,11 @@ import logo from "./logo.svg";
 import "./App.css";
 import Highlight from "./components/Highlight";
 import Podcast from "./components/Podcast";
-
 import { useState } from "react";
+import ShowNotes from "./components/ShowNotes";
 
 function App() {
-  const [showForm, setShowForm] = useState("highlights");
+  const [showForm, setShowForm] = useState("shownotes");
   const [isMenuOpen, setIsMenuOpen] = useState(true);
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [highlightIsActive, setHighlightIsActive] = useState(true);
@@ -102,6 +102,20 @@ function App() {
                     Podcast
                   </b>
                 </li>
+                <li
+                  onClick={() => {
+                    setShowForm("showNotes");
+                    setHighlightIsActive(false);
+                  }}
+                >
+                  <b
+                    className={
+                      !highlightIsActive ? "text-blue-500" : "text-white"
+                    }
+                  >
+                    Show Notes
+                  </b>
+                </li>
               </ul>
             )}
           </div>
@@ -156,7 +170,9 @@ function App() {
           <Highlight />
         ) : showForm === "podcast" ? (
           <Podcast />
-        ) : null}
+        ) : (
+          <ShowNotes />
+        )}
       </div>
     </div>
   );
