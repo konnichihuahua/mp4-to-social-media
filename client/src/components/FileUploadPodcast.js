@@ -25,24 +25,39 @@ const FileUploadPodcast = ({
     };
   };
 
-  const cutTranscript = (transcript) => {
-    const words = transcript.split(/\s+/); // Split transcript into words
-    const chunkSize = 3000; // Desired chunk size in words
-    const chunks = [];
+  const splitTranscriptIntoParagraphs = (transcript) => {
+    const paragraphs = [];
+    const words = transcript.split(" ");
+    let currentParagraph = "";
 
-    for (let i = 0; i < words.length; i += chunkSize) {
-      const chunk = words.slice(i, i + chunkSize).join(" ");
-      chunks.push(chunk);
+    for (const word of words) {
+      if ((currentParagraph + " " + word).trim().split(" ").length <= 2000) {
+        currentParagraph += " " + word;
+      } else {
+        const lastSpaceIndex = currentParagraph.lastIndexOf(" ");
+        if (lastSpaceIndex !== -1) {
+          const splitIndex = lastSpaceIndex + 1;
+          paragraphs.push(currentParagraph.substring(0, splitIndex).trim());
+          currentParagraph = currentParagraph.substring(splitIndex);
+        } else {
+          paragraphs.push(currentParagraph.trim());
+          currentParagraph = word;
+        }
+      }
     }
 
-    return chunks;
+    if (currentParagraph.trim() !== "") {
+      paragraphs.push(currentParagraph.trim());
+    }
+
+    return paragraphs;
   };
   const readFile = async (event) => {
     event.preventDefault();
-    const separatedTranscripts = cutTranscript(transcript);
+    const separatedTranscripts = splitTranscriptIntoParagraphs(transcript);
 
     setResultIsLoading(true);
-    await fetch("http://localhost:3000/transcript", {
+    await fetch("/transcript", {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
@@ -52,10 +67,10 @@ const FileUploadPodcast = ({
       .then((result) => result.json())
       .then((data) => {
         setTitle(JSON.parse(data[0]));
-        console.log(data[1]);
         setDescription(JSON.parse(data[1]));
         setTags(data[2]);
         setResultIsLoading(false);
+
         setFileUploaded(false);
       });
   };

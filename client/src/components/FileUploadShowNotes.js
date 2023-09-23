@@ -8,6 +8,9 @@ const FileUploadShowNotes = ({
   fileUploaded,
   setGuestInfo,
   setFileUploaded,
+  setResources,
+  setSummary,
+  setSteps,
 }) => {
   const [transcript, setTranscript] = useState({});
 
@@ -31,7 +34,7 @@ const FileUploadShowNotes = ({
     let currentParagraph = "";
 
     for (const word of words) {
-      if ((currentParagraph + " " + word).trim().split(" ").length <= 2000) {
+      if ((currentParagraph + " " + word).trim().split(" ").length <= 2200) {
         currentParagraph += " " + word;
       } else {
         // Check if we are in the middle of a paragraph
@@ -61,7 +64,7 @@ const FileUploadShowNotes = ({
     const separatedTranscripts = splitTranscriptIntoParagraphs(transcript);
     console.log(separatedTranscripts);
     setResultIsLoading(true);
-    await fetch("http://localhost:3000/shownotes", {
+    await fetch("/shownotes", {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
@@ -83,9 +86,14 @@ const FileUploadShowNotes = ({
             console.error(`Error parsing JSON: ${timestamp}`);
           }
         }
+
         console.log(jsonObjects);
+        console.log();
         setTimestamps(jsonObjects);
+        setResources(JSON.parse(data.resources)[0]);
+        setSummary(data.summary);
         setResultIsLoading(false);
+        setSteps(JSON.parse(data.steps)[0]);
       });
   };
   return (

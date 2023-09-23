@@ -40,7 +40,7 @@ function PodcastResults({ title, description, tags }) {
               {description.intro}
               <br /> <br />
               <ul>
-                Key Discussion Points:
+                What You'll Learn:
                 {description.key_discussion_points.map((point, index) => (
                   <li key={index}> • {point}</li>
                 ))}

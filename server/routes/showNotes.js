@@ -51,7 +51,7 @@ const getTimestamps = async (transcript) => {
               },
               ...
             ]
-            Use 1 short, concise sentence for each topic. Focus on what the readers will learn. Don't enclose the timestamps with brackets or parenthesis. The timestamp must only include the beginning not the end. The podcast transcript is provided below: ${transcript[i]}
+            Use 1 short, concise sentence for each topic. Focus on what the readers will learn. Don't enclose the timestamps with brackets or parenthesis. The timestamp must only include the beginning not the end. The podcast transcript is provided below: "${transcript[i]}"
           `,
           },
         ],
@@ -86,12 +86,113 @@ const getBio = async (summary) => {
   return generatedBio;
 };
 
+const getResources = async (summary) => {
+  let generatedResources = [];
+  await openai
+    .createChatCompletion({
+      model: "gpt-3.5-turbo",
+      messages: [
+        {
+          role: "user",
+          content: `From this transcript summary: "${summary}", would you please send me suggested reading, resources and studies from this summary in JSON format?
+          --------
+          Send the result in the following JSON structure
+          [{
+            "resources": ["resource 1", "resource 2", "resource 3"]
+          }]
+          `,
+        },
+      ],
+    })
+    .then((result) => {
+      generatedResources = result.data.choices[0].message.content;
+      console.log(generatedResources);
+    });
+
+  return generatedResources;
+};
+
+const getMinifiedSummary = async (summary) => {
+  let geneRatedsummary = "";
+
+  await openai
+    .createChatCompletion({
+      model: "gpt-3.5-turbo",
+      messages: [
+        {
+          role: "user",
+          content: `Rewrite this in 1 paragraph for the podcast show notes from this transcript summary. "${summary}? Write in short, concise sentences. Start wtih "In this podcast episode,...". Rewrite like a native american english speaker.
+
+          `,
+        },
+      ],
+    })
+    .then((result) => {
+      geneRatedsummary =
+        geneRatedsummary + result.data.choices[0].message.content;
+    });
+
+  return geneRatedsummary;
+};
+
+const getActionSteps = async (summary) => {
+  let generatedActionSteps = [];
+  await openai
+    .createChatCompletion({
+      model: "gpt-3.5-turbo",
+      messages: [
+        {
+          role: "user",
+          content: `From this transcript summary: '${summary}', could you please provide me  with 7 action steps and recommendations in JSON Format?
+
+          And here's the corresponding JSON structure:
+          
+          [{
+            "steps": "["Step 1", "Step 2", "Step 3", ...]"
+          }]`,
+        },
+      ],
+    })
+    .then((result) => {
+      generatedActionSteps = result.data.choices[0].message.content;
+    });
+
+  return generatedActionSteps;
+};
 const openai = new OpenAIApi(configuration);
 router.post("/", async (req, res) => {
   const summary = await getSummary(req.body);
+  console.log(summary);
   const generatedTimestamps = await getTimestamps(req.body);
+  console.log(generatedTimestamps);
   const generatedBio = await getBio(summary);
-  res.json({ bio: generatedBio, timestamps: generatedTimestamps });
+  console.log(generatedBio);
+  const generatedResources = await getResources(summary);
+  console.log(generatedResources);
+  const generatedActionSteps = await getActionSteps(summary);
+  console.log(generatedActionSteps);
+  const generatedSummary = await getMinifiedSummary(summary);
+  console.log(generatedSummary);
+
+  res.json({
+    bio: generatedBio,
+    timestamps: generatedTimestamps,
+    resources: generatedResources,
+    summary: generatedSummary,
+    steps: generatedActionSteps,
+  });
+});
+
+router.post("/summary", async (req, res) => {
+  const summary = await getSummary(req.body);
+  console.log(summary);
+
+  const generatedSummary = await getMinifiedSummary(summary);
+  console.log(generatedSummary);
+
+  res.json({
+    summary: generatedSummary,
+  });
 });
 
 export default router;

@@ -30,6 +30,13 @@ function ShowNotes() {
     outro: "------------------",
   });
   const [fileUploaded, setFileUploaded] = useState(false);
+  const [resources, setResources] = useState({
+    resources: ["------", "-------", "-----"],
+  });
+  const [steps, setSteps] = useState({
+    steps: ["---------------", "---------------", "---------------"],
+  });
+  const [summary, setSummary] = useState("lorem ipsum dolor");
   const [tags, setTags] = useState("------------------");
   const [resultIsLoading, setResultIsLoading] = useState(false);
 
@@ -44,6 +51,9 @@ function ShowNotes() {
         setTags={setTags}
         setFileUploaded={setFileUploaded}
         fileUploaded={fileUploaded}
+        setResources={setResources}
+        setSteps={setSteps}
+        setSummary={setSummary}
         setGuestInfo={setGuestInfo}
       />
 
@@ -52,6 +62,9 @@ function ShowNotes() {
           description={description}
           timestamps={timestamps}
           tags={tags}
+          summary={summary}
+          resources={resources}
+          steps={steps}
           guestInfo={guestInfo}
         />
       ) : (
